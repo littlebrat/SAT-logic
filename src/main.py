@@ -1,3 +1,6 @@
+from src.structure.kb import KnowledgeBase
+
+
 def main(args):
     # Dictionary for choosing the desired algorithm
     algorithm = {'walk': None, 'hill_climbing': None,
@@ -19,19 +22,11 @@ def main(args):
             elif m in algorithm.keys():
                 desired_alg = algorithm[m]
 
-    # Create the map object for this file
+    # Create the sat problem object for this file
     try:
-        earth = World()
-        earth.from_file(args[1])
+        sat = KnowledgeBase.from_file(args[1])
     except FileNotFoundError:
-        print(".map file does not exist.")
-
-    # Create the client requests object for this file
-    try:
-        clients = Pawns(earth)
-        clients.from_file(args[2])
-    except FileNotFoundError:
-        print(".cli file does not exist.")
+        print(".txt file does not exist.")
 
     #Search Procedure
     if debug is True:
