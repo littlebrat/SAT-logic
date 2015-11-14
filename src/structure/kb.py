@@ -1,13 +1,17 @@
 from src.structure.clause import Clause
 
+
 class KnowledgeBase:
+    """
+    KB that represents a SAT problem with a set of clauses with restrictions.
+    """
 
     def __init__(self):
         self.variables = []
         self.clauses = []
 
     @staticmethod
-    def from_file(self,path):
+    def from_file(self, path):
         kb = KnowledgeBase()
         # this method loads a file into a object of this class.
         with open(path) as file:
@@ -19,7 +23,7 @@ class KnowledgeBase:
                     continue
                 if words[0] is 'p' and words[1] is 'cnf' and len(words) == 4:
                     # read format
-                    self.variables = range(1,int(words[2])+1)
+                    self.variables = range(1, int(words[2])+1)
                     clauses = int(words[3])
                 else:
                     aux = words[:-1]
@@ -27,7 +31,7 @@ class KnowledgeBase:
                     self.clauses.append(cl)
         return kb
 
-    def get_valid_clauses(self,atribution):
+    def get_valid_clauses(self, attribution):
         r = 0
 
         return r
