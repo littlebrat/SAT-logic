@@ -1,6 +1,6 @@
 from src.structure.clause import Clause
 
-class KnowledgeBase:
+class Sentence:
 
     def __init__(self):
         self.variables = []
@@ -8,7 +8,7 @@ class KnowledgeBase:
 
     @staticmethod
     def from_file(self,path):
-        kb = KnowledgeBase()
+        sentence = Sentence()
         # this method loads a file into a object of this class.
         with open(path) as file:
             for line in file:
@@ -25,7 +25,7 @@ class KnowledgeBase:
                     aux = words[:-1]
                     cl = Clause(aux)
                     self.clauses.append(cl)
-        return kb
+        return sentence
 
     def get_valid_clauses(self,atribution):
         r = 0
