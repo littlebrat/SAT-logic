@@ -10,16 +10,16 @@ class Clause:
     def __init__(self, lst):
         self.cl = {}
         for x in lst:
-            num  = int(x)
+            num = int(x)
             if num > 0:
                 self.cl[abs(num)] = True
             else:
                 self.cl[abs(num)] = False
 
-    def isValid(self,literal,bool):
+    def is_valid(self, literal, bl):
         # This method checks if the boolean attribution for the input literal
         # argument satisfies this clause object.
-        if self.cl[literal] == bool:
+        if self.cl[literal] == bl or literal not in self.cl:
             return True
         else:
             return False
@@ -34,7 +34,7 @@ class Clause:
         # Method for deep-copying the clause 'other'.
         ls = []
         for literal in other.keys():
-            if other.cl[literal] == True:
+            if other.cl[literal]:
                 ls.append(str(literal))
             else:
                 ls.append(str(-literal))
