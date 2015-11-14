@@ -27,3 +27,9 @@ class KnowledgeBase:
                     self.clauses.append(cl)
         return kb
 
+    def get_valid_clauses(self,atribution):
+        r = 0
+
+        return r
+
+
