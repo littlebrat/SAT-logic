@@ -22,9 +22,13 @@ class Solution:
         # Set the variable 'var' to the boolean value of 'bl'.
         self.sl[var] = bl
 
+    def output(self):
+        # 
+
+
     def __repr__(self):
         # Method to print the object in string format in the form: [x1: bool; ...; xn: bool].
         r = ''
         for literal in self.sl.keys():
-            r += str(literal) + ': ' + str(self.cl[literal]) + '; '
+            r += str(literal) + ': ' + str(self.sl[literal]) + '; '
         return r[:-2]
