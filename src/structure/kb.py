@@ -31,7 +31,10 @@ class KnowledgeBase:
                     kb.clauses.append(cl)
         return kb
 
-    def get_valid_clauses(self, attribution):
+    def variables(self):
+        return self.variables
+
+    def get_valid_clauses(self, attribution, best):
         r = 0
 
         return r
@@ -42,5 +45,5 @@ class KnowledgeBase:
             r += str(c) + '\n'
         return r
 
-sent = KnowledgeBase.from_file('../test_files/pikachu.txt')
+sent = KnowledgeBase.from_file('../test_files/snorlax.txt')
 print(sent)
