@@ -11,7 +11,7 @@ class KnowledgeBase:
         self.clauses = []
 
     @staticmethod
-    def from_file(self, path):
+    def from_file(path):
         kb = KnowledgeBase()
         # this method loads a file into a object of this class.
         with open(path) as file:
@@ -21,14 +21,14 @@ class KnowledgeBase:
                 if words[0] is 'c':
                     # comments line should be ignored
                     continue
-                if words[0] is 'p' and words[1] is 'cnf' and len(words) == 4:
+                if words[0] == 'p' and words[1] == 'cnf' and len(words) == 4:
                     # read format
-                    self.variables = range(1, int(words[2])+1)
+                    kb.variables = range(1, int(words[2])+1)
                     clauses = int(words[3])
                 else:
                     aux = words[:-1]
                     cl = Clause(aux)
-                    self.clauses.append(cl)
+                    kb.clauses.append(cl)
         return kb
 
     def get_valid_clauses(self, attribution):
@@ -36,4 +36,11 @@ class KnowledgeBase:
 
         return r
 
+    def __repr__(self):
+        r = ''
+        for c in self.clauses:
+            r += str(c) + '\n'
+        return r
 
+sent = KnowledgeBase.from_file('../test_files/pikachu.txt')
+print(sent)
