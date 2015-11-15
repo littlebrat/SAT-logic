@@ -23,8 +23,8 @@ class Solution:
         self.sl[var] = bl
 
     def output(self):
-        # 
-
+        # YOUR CODE HERE FAGGOT!!!
+        return 0
 
     def __repr__(self):
         # Method to print the object in string format in the form: [x1: bool; ...; xn: bool].
