@@ -24,6 +24,12 @@ class Clause:
         else:
             return False
 
+    def is_clause_satisfied(self, solution):
+        for l in self.cl.keys():
+            if self.cl[l] == solution.literal(l):
+                return True
+        return False
+
     def simplify(self, literal):
         # If literal appear on this clause, remove it from clause.
         if literal in self.cl:
