@@ -50,7 +50,6 @@ class Algorithms:
                 # flip whichever symbol in clause that maximizes the number of satisfied clauses.
                 else:
                     # Variable to track the best score for satisfied clauses.
-                    if
                     max_score = sentence.get_validated_clauses(sl)
                     # Variable to store the literal attribution of the best score.
                     best = None
