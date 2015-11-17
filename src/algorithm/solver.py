@@ -1,6 +1,5 @@
 from src.structure.sentence import Sentence
 from src.structure.solution import Solution
-from src.structure.clause import Clause
 from random import choice
 from random import random
 
@@ -103,7 +102,7 @@ class Algorithms:
 
 
 sent = Sentence.from_file('../test_files/uf20/uf20-01.cnf')
-r = Algorithms.gsat(sent, 50, 30)
-r = Algorithms.walksat(sent, 0.3, 50)
+# r = Algorithms.gsat(sent, 50, 30)
+r = Algorithms.walksat(sent, 0.8, 40)
 
 print(r)

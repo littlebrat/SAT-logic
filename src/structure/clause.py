@@ -29,9 +29,9 @@ class Clause:
         else:
             return None, None
 
-    def simplify(self, literal):
+    def simplify(self, literal, bl):
         # If literal appear on this clause, remove it from clause.
-        if literal in self.cl.keys():
+        if literal in self.cl.keys() and self.cl[literal] == bl:
             del self.cl[literal]
 
     def get_literals(self):
