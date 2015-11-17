@@ -16,14 +16,6 @@ class Clause:
             else:
                 self.cl[abs(num)] = False
 
-    def is_valid(self, literal, bl):
-        # This method checks if the boolean attribution for the input literal
-        # argument satisfies this clause object.
-        if self.cl[literal] == bl or literal not in self.cl:
-            return True
-        else:
-            return False
-
     def is_clause_satisfied(self, solution):
         for l in self.cl.keys():
             if self.cl[l] == solution.literal(l):
@@ -34,6 +26,9 @@ class Clause:
         # If literal appear on this clause, remove it from clause.
         if literal in self.cl:
             del self.cl[literal]
+
+    def get_literals(self):
+        return list(self.cl.keys())
 
     @staticmethod
     def copy(other):

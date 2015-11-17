@@ -43,6 +43,14 @@ class Sentence:
         else:
             return False
 
+    def false_clauses(self, solution):
+        false_sentences = []
+        for c in self.clauses:
+            if not c.is_clause_satisfied(solution):
+                false_sentences.append(c)
+        return false_sentences
+
+
     def __repr__(self):
         r = ''
         for c in self.clauses:
