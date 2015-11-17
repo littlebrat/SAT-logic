@@ -50,6 +50,44 @@ class Sentence:
                 false_sentences.append(c)
         return false_sentences
 
+    def find_pure_symbol(self, symbols):
+        for s in symbols:
+            found_pos, found_neg = False, False
+            for c in self.clauses:
+                if not found_pos and c.exists(s, True):
+                    found_pos = True
+                if not found_neg and c.exists(s, False):
+                    found_neg = True
+            if found_pos != found_neg:
+                return s, found_pos
+        return None, None
+
+    def find_unit_clause(self, symbols):
+        for c in self.clauses:
+            literal, bl = c.get_unit_symbol()
+            if literal is not None and literal in symbols:
+                return literal, bl
+        return None, None
+
+    def variable_set(self):
+        v_order = {}
+        for v in range(1, self.variables + 1):
+            v_order[v] = 0
+        for c in self.clauses:
+            for vr in range(1, self.variables + 1):
+                if c.has_literal(vr):
+                    v_order[vr] += 1
+        x = sorted(list(v_order.keys()), key=v_order.__getitem__)
+        return x
+
+    @staticmethod
+    def sent_copy(other):
+        r = Sentence()
+        r.variables = other.variables
+        for c in other.clauses:
+            aux = Clause.copy(c)
+            r.clauses.append(aux)
+        return r
 
     def __repr__(self):
         r = ''

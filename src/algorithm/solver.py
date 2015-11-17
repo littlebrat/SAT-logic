@@ -36,6 +36,7 @@ class Algorithms:
                         sl.toggle(best)
         return 'No solution was found.'
 
+    @staticmethod
     def walksat(sentence, p, max_flips):
         # Instatiate the model for the problem
         sl = Solution(sentence.variables)
@@ -67,12 +68,42 @@ class Algorithms:
                             max_score = score
                             best = literal
                         sl.toggle(literal)
-                    if best != None:
+                    if best is not None:
                         sl.toggle(best)
         return 'No solution was found.'
 
-sent = Sentence.from_file('../test_files/pokemon/charmander.txt')
-# r = Algorithms.gsat(sent, 50, 20)
-r = Algorithms.walksat(sent, 0.5, 20)
-print(r)
 
+    @staticmethod
+    def setup_dpll(sentence):
+        model = Solution()
+        symbols = sentence.variable_set()
+        return (Algorithms.dpll(Sentence.sent_copy(sentence), symbols.copy(), model.deep_copy()) or Algorithms.dpll(Sentence.sent_copy(sentence), symbols.copy(), model.deep_copy()))
+
+    @staticmethod
+    def dpll(sentence, symbols, model):
+        if sentence.is_satisfied(model):
+            return True
+        if sentence.invalid(model):
+            return False
+        s, bl = sentence.find_pure_symbol(symbols)
+        if s:
+            symbols.remove(s)
+            model.set(s, bl)
+            return Algorithms.dpll(sentence, symbols, model)
+        s, bl = sentence.find_unit_clause(symbols)
+        if s:
+            symbols.remove(s)
+            model.set(s, bl)
+            return Algorithms.dpll(sentence, symbols, model)
+        s = symbols.pop()
+        model2 = model.deep_copy()
+        model.set(s, True)
+        model2.set(s, False)
+        return (Algorithms.dpll(Sentence.sent_copy(sentence), symbols.copy(), model) or Algorithms.dpll(Sentence.sent_copy(sentence), symbols.copy(), model2))
+
+
+sent = Sentence.from_file('../test_files/uf20/uf20-01.cnf')
+r = Algorithms.gsat(sent, 50, 30)
+r = Algorithms.walksat(sent, 0.3, 50)
+
+print(r)

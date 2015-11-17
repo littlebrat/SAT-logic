@@ -22,13 +22,32 @@ class Clause:
                 return True
         return False
 
+    def get_unit_symbol(self):
+        if len(self.cl.keys()) == 1:
+            k = list(self.cl.keys())[0]
+            return k, self.cl[k]
+        else:
+            return None, None
+
     def simplify(self, literal):
         # If literal appear on this clause, remove it from clause.
-        if literal in self.cl:
+        if literal in self.cl.keys():
             del self.cl[literal]
 
     def get_literals(self):
         return list(self.cl.keys())
+
+    def exists(self, literal, bl):
+        if literal in self.cl.keys() and self.cl[literal] == bl:
+            return True
+        else:
+            return False
+
+    def has_literal(self, v):
+        if v in self.cl.keys():
+            return True
+        else:
+            return False
 
     @staticmethod
     def copy(other):
