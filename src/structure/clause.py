@@ -28,7 +28,7 @@ class Clause:
             del self.cl[literal]
 
     def get_literals(self):
-        return self.cl.keys()
+        return list(self.cl.keys())
 
     @staticmethod
     def copy(other):
