@@ -1,11 +1,12 @@
 from random import getrandbits
-
+import copy
 
 class Solution:
 
     def __init__(self, num_vars):
         # The object is initialized as a dictionary of literals-booleans
         self.sl = {}
+        self.vars = num_vars
         for v in range(1, num_vars + 1):
             self.sl[v] = None
 
@@ -28,7 +29,14 @@ class Solution:
 
     def output(self):
         # YOUR CODE HERE FAGGOT!!!
-        return 0
+        return
+
+    @staticmethod
+    def deep_copy(other):
+        model = Solution(other.vars)
+        d = copy.deepcopy(other.sl)
+        model.sl = d
+        return model
 
     def __repr__(self):
         # Method to print the object in string format in the form: [x1: bool; ...; xn: bool].

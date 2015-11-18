@@ -16,25 +16,51 @@ class Clause:
             else:
                 self.cl[abs(num)] = False
 
+    def dim(self):
+        return len(list(self.cl.keys()))
+
+    def remove_literal(self, literal):
+        del self.cl[literal]
+
+    def empty(self):
+        if len(list(self.cl.keys())) == 0:
+            return True
+        else:
+            return False
+
     def is_clause_satisfied(self, solution):
         for l in self.cl.keys():
             if self.cl[l] == solution.literal(l):
                 return True
         return False
 
-    def simplify(self, literal):
-        # If literal appear on this clause, remove it from clause.
-        if literal in self.cl:
-            del self.cl[literal]
+    def get_unit_symbol(self):
+        if len(self.cl.keys()) == 1:
+            k = list(self.cl.keys())[0]
+            return k, self.cl[k]
+        else:
+            return None, None
 
     def get_literals(self):
         return list(self.cl.keys())
+
+    def exists(self, literal, bl):
+        if literal in self.cl.keys() and self.cl[literal] == bl:
+            return True
+        else:
+            return False
+
+    def has_literal(self, v):
+        if v in self.cl.keys():
+            return True
+        else:
+            return False
 
     @staticmethod
     def copy(other):
         # Method for deep-copying the clause 'other'.
         ls = []
-        for literal in other.keys():
+        for literal in other.cl.keys():
             if other.cl[literal]:
                 ls.append(str(literal))
             else:

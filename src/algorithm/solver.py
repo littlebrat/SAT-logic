@@ -1,6 +1,5 @@
 from src.structure.sentence import Sentence
 from src.structure.solution import Solution
-from src.structure.clause import Clause
 from random import choice
 from random import random
 
@@ -36,6 +35,7 @@ class Algorithms:
                         sl.toggle(best)
         return 'No solution was found.'
 
+    @staticmethod
     def walksat(sentence, p, max_flips):
         # Instatiate the model for the problem
         sl = Solution(sentence.variables)
@@ -67,12 +67,45 @@ class Algorithms:
                             max_score = score
                             best = literal
                         sl.toggle(literal)
-                    if best != None:
+                    if best is not None:
                         sl.toggle(best)
         return 'No solution was found.'
 
-sent = Sentence.from_file('../test_files/pokemon/charmander.txt')
-# r = Algorithms.gsat(sent, 50, 20)
-r = Algorithms.walksat(sent, 0.5, 20)
-print(r)
 
+    @staticmethod
+    def setup_dpll(sentence):
+        model = Solution(sentence.variables)
+        symbols = sentence.variable_set()
+        return Algorithms.dpll(sentence, symbols, model)
+
+    @staticmethod
+    def dpll(sentence, symbols, model):
+        if sentence.is_model_verified(model):
+            return True
+        if sentence.is_model_wrong(model):
+            return False
+        s, bl = sentence.find_pure_symbol(symbols)
+        if s:
+            new_sentence = Sentence.simplify(sentence,s, bl)
+            symbols.remove(s)
+            model.set(s, bl)
+            return Algorithms.dpll(new_sentence, symbols, model)
+        s, bl = sentence.find_unit_clause(symbols)
+        if s:
+            new_sentence = Sentence.simplify(sentence,s, bl)
+            symbols.remove(s)
+            model.set(s, bl)
+            return Algorithms.dpll(new_sentence, symbols, model)
+        s = symbols.pop()
+        model2 = Solution.deep_copy(model)
+        model.set(s, True)
+        model2.set(s, False)
+        new_sentence2 = Sentence.sent_copy(sentence)
+        return (Algorithms.dpll(Sentence.simplify(sentence, s, True), symbols.copy(), model) or Algorithms.dpll(Sentence.simplify(new_sentence2, s, False), symbols.copy(), model2))
+
+
+sent = Sentence.from_file('../test_files/uuf50.218.1000/uuf50-01.cnf')
+# r = Algorithms.gsat(sent, 50, 30)
+# r = Algorithms.walksat(sent, 0.8, 1000)
+r = Algorithms.setup_dpll(sent)
+print(r)
