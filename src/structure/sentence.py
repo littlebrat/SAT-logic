@@ -43,6 +43,25 @@ class Sentence:
         else:
             return False
 
+    @staticmethod
+    def simplify(other, literal, key):
+        s = Sentence()
+        s.variables = other.variables
+        for c in other.clauses:
+
+
+    def is_model_verified(self, solution):
+        if len(self.clauses) == 0:
+            return True
+        else:
+            return False
+
+    def is_model_wrong(self, solution):
+        for c in self.clauses:
+            if c.empty():
+                return True
+        return False
+
     def false_clauses(self, solution):
         false_sentences = []
         for c in self.clauses:

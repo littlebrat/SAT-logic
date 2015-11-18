@@ -16,6 +16,12 @@ class Clause:
             else:
                 self.cl[abs(num)] = False
 
+    def empty(self):
+        if len(list(self.cl.keys())) == 0:
+            return True
+        else:
+            return False
+
     def is_clause_satisfied(self, solution):
         for l in self.cl.keys():
             if self.cl[l] == solution.literal(l):
@@ -28,11 +34,6 @@ class Clause:
             return k, self.cl[k]
         else:
             return None, None
-
-    def simplify(self, literal, bl):
-        # If literal appear on this clause, remove it from clause.
-        if literal in self.cl.keys() and self.cl[literal] == bl:
-            del self.cl[literal]
 
     def get_literals(self):
         return list(self.cl.keys())

@@ -80,9 +80,9 @@ class Algorithms:
 
     @staticmethod
     def dpll(sentence, symbols, model):
-        if sentence.is_satisfied(model):
+        if sentence.is_model_verified(model):
             return True
-        if sentence.invalid(model):
+        if sentence.is_model_wrong(model):
             return False
         s, bl = sentence.find_pure_symbol(symbols)
         if s:
@@ -103,6 +103,6 @@ class Algorithms:
 
 sent = Sentence.from_file('../test_files/uf20/uf20-01.cnf')
 # r = Algorithms.gsat(sent, 50, 30)
-r = Algorithms.walksat(sent, 0.8, 40)
+r = Algorithms.walksat(sent, 0.8, 500)
 
 print(r)
