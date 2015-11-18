@@ -16,6 +16,12 @@ class Clause:
             else:
                 self.cl[abs(num)] = False
 
+    def dim(self):
+        return len(list(self.cl.keys()))
+
+    def remove_literal(self, literal):
+        del self.cl[literal]
+
     def empty(self):
         if len(list(self.cl.keys())) == 0:
             return True
@@ -54,7 +60,7 @@ class Clause:
     def copy(other):
         # Method for deep-copying the clause 'other'.
         ls = []
-        for literal in other.keys():
+        for literal in other.cl.keys():
             if other.cl[literal]:
                 ls.append(str(literal))
             else:

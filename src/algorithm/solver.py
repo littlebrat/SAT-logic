@@ -74,9 +74,9 @@ class Algorithms:
 
     @staticmethod
     def setup_dpll(sentence):
-        model = Solution()
+        model = Solution(sentence.variables)
         symbols = sentence.variable_set()
-        return (Algorithms.dpll(Sentence.sent_copy(sentence), symbols.copy(), model.deep_copy()) or Algorithms.dpll(Sentence.sent_copy(sentence), symbols.copy(), model.deep_copy()))
+        return Algorithms.dpll(sentence, symbols, model)
 
     @staticmethod
     def dpll(sentence, symbols, model):
@@ -86,23 +86,26 @@ class Algorithms:
             return False
         s, bl = sentence.find_pure_symbol(symbols)
         if s:
+            new_sentence = Sentence.simplify(sentence,s, bl)
             symbols.remove(s)
             model.set(s, bl)
-            return Algorithms.dpll(sentence, symbols, model)
+            return Algorithms.dpll(new_sentence, symbols, model)
         s, bl = sentence.find_unit_clause(symbols)
         if s:
+            new_sentence = Sentence.simplify(sentence,s, bl)
             symbols.remove(s)
             model.set(s, bl)
-            return Algorithms.dpll(sentence, symbols, model)
+            return Algorithms.dpll(new_sentence, symbols, model)
         s = symbols.pop()
-        model2 = model.deep_copy()
+        model2 = Solution.deep_copy(model)
         model.set(s, True)
         model2.set(s, False)
-        return (Algorithms.dpll(Sentence.sent_copy(sentence), symbols.copy(), model) or Algorithms.dpll(Sentence.sent_copy(sentence), symbols.copy(), model2))
+        new_sentence2 = Sentence.sent_copy(sentence)
+        return (Algorithms.dpll(Sentence.simplify(sentence, s, True), symbols.copy(), model) or Algorithms.dpll(Sentence.simplify(new_sentence2, s, False), symbols.copy(), model2))
 
 
-sent = Sentence.from_file('../test_files/uf20/uf20-01.cnf')
+sent = Sentence.from_file('../test_files/uuf50.218.1000/uuf50-01.cnf')
 # r = Algorithms.gsat(sent, 50, 30)
-r = Algorithms.walksat(sent, 0.8, 500)
-
+# r = Algorithms.walksat(sent, 0.8, 1000)
+r = Algorithms.setup_dpll(sent)
 print(r)

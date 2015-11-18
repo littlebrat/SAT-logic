@@ -18,13 +18,13 @@ class Sentence:
             for line in file:
                 # for each line in the file verify if the structure of the line is correct.
                 words = line.split()
-                if words[0] is 'c':
+                if len(words) != 0 and words[0] is 'c':
                     # comments line should be ignored
                     continue
-                if words[0] == 'p' and words[1] == 'cnf' and len(words) == 4:
+                elif len(words) != 0 and words[0] == 'p' and words[1] == 'cnf' and len(words) == 4:
                     # read format
                     sentence.variables = int(words[2])
-                else:
+                elif len(words) != 0 and words[0] != '%' and 1 <= abs(int(words[0])) <= sentence.variables:
                     aux = words[:-1]
                     cl = Clause(aux)
                     sentence.clauses.append(cl)
@@ -48,6 +48,16 @@ class Sentence:
         s = Sentence()
         s.variables = other.variables
         for c in other.clauses:
+            q = c.has_literal(literal)
+            if q and c.exists(literal, key):
+                continue
+            elif q:
+                c.remove_literal(literal)
+                s.clauses.append(c)
+            else:
+                s.clauses.append(c)
+        return s
+
 
 
     def is_model_verified(self, solution):
