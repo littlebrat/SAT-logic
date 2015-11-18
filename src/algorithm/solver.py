@@ -3,6 +3,8 @@ from src.structure.solution import Solution
 from random import choice
 from random import random
 
+from time import time
+
 
 class Algorithms:
     """
@@ -71,7 +73,6 @@ class Algorithms:
                         sl.toggle(best)
         return 'No solution was found.'
 
-
     @staticmethod
     def setup_dpll(sentence):
         model = Solution(sentence.variables)
@@ -86,13 +87,13 @@ class Algorithms:
             return False
         s, bl = sentence.find_pure_symbol(symbols)
         if s:
-            new_sentence = Sentence.simplify(sentence,s, bl)
+            new_sentence = Sentence.simplify(sentence, s, bl)
             symbols.remove(s)
             model.set(s, bl)
             return Algorithms.dpll(new_sentence, symbols, model)
         s, bl = sentence.find_unit_clause(symbols)
         if s:
-            new_sentence = Sentence.simplify(sentence,s, bl)
+            new_sentence = Sentence.simplify(sentence, s, bl)
             symbols.remove(s)
             model.set(s, bl)
             return Algorithms.dpll(new_sentence, symbols, model)
@@ -104,8 +105,11 @@ class Algorithms:
         return (Algorithms.dpll(Sentence.simplify(sentence, s, True), symbols.copy(), model) or Algorithms.dpll(Sentence.simplify(new_sentence2, s, False), symbols.copy(), model2))
 
 
-sent = Sentence.from_file('../test_files/uuf50.218.1000/uuf50-01.cnf')
+sent = Sentence.from_file('../test_files/uf250/uf250-01.cnf')
+start = time()
 # r = Algorithms.gsat(sent, 50, 30)
 # r = Algorithms.walksat(sent, 0.8, 1000)
 r = Algorithms.setup_dpll(sent)
+end = time()
+print(end - start)
 print(r)
