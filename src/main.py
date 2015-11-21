@@ -6,8 +6,8 @@ from os.path import isfile, join
 
 def main(args):
 
+    # State variables from user input
     t = time()
-
     mode, params = None, None
     path = None
     is_batch = False
@@ -16,6 +16,7 @@ def main(args):
     result = None
 
     for i in range(len(args)):
+        # Check user inputs
         if args[i] == '-a':
             if args[i+1] == 'dpll':
                 mode = 'dpll'
@@ -102,5 +103,4 @@ def get_files_from_folder(path):
     return only_files
 
 if __name__ == "__main__":
-    is_all_satisfiable('test_files/75vars_325clauses/not_satis',False)
-    # main(sys.argv)
+    main(sys.argv)
