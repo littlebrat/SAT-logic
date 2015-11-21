@@ -1,52 +1,85 @@
-from src.structure.kb import KnowledgeBase
-
+from src.structure.sentence import Sentence
+import sys
+from src.algorithm.solver import *
+from os import listdir
+from os.path import isfile, join
 
 def main(args):
-    # Dictionary for choosing the desired algorithm
-    algorithm = {'walk': None, 'hill_climbing': None,
-                 '-dpll': None
-                 }
 
-    # If no algorithm is chosen, always go with uniform cost search
-    desired_alg = SearchAgent.uniformCostSearch
+    t = time.time()
 
-    # Debug mode is always off, if nothing more is said
-    debug = False
+    mode, params = None, None
+    path = None
+    is_batch = False
+    with_time = False
+    output_file = False
+    result = None
 
-    # Check arguments inserted on the command line
-    if len(args) >= 4:
-        modes = args[3:len(args)]
-        for m in modes:
-            if m == '-d':
-                debug = True
-            elif m in algorithm.keys():
-                desired_alg = algorithm[m]
+    for i in range(len(args)):
+        if args[i] == '-a':
+            if args[i+1] == 'dpll':
+                mode = 'dpll'
+            elif args[i+1] == 'walk':
+                mode = 'walk'
+                params = [args[i+2], args[i+3]]
+            elif args[i+1] == 'gsat':
+                mode = 'gsat'
+                params = [args[i+2], args[i+3]]
+            else:
+                return Exception('Unknown algorithm or wrong parameter size.')
+        elif args[i] == '-f':
+            if isinstance(args[i+1], str):
+                path = args[i+1]
+            else:
+                return Exception('Unknown path.')
+        elif args[i] == '-b':
+            is_batch = True
+        elif args[i] == '-t':
+            with_time = True
+        elif args[i] == '-o':
+            output_file = True
 
-    # Create the sat problem object for this file
-    try:
-        sat = KnowledgeBase.from_file(args[1])
-    except FileNotFoundError:
-        print(".txt file does not exist.")
+    if is_batch is False:
+        sentence = Sentence.from_file(path)
+        if mode == 'dpll':
+            result = Algorithms.setup_dpll(sentence)
+        elif mode == 'walk':
+            result = Algorithms.walksat(sentence, params[0], params[1])
+        elif mode == 'gsat':
+            result = Algorithms.gsat(sentence, params[0], params[1])
+    # else:
 
-    #Search Procedure
-    if debug is True:
-        print('>>>  RUN SEARCH')
-        i = 1
-    towrite = []
-    for c in clients:
 
-        # Search algorithm
-        plan = desired_alg(c)
-        towrite.append(plan)
 
-        # For debugging on terminal only
-        if debug is True:
-            print('>> client: '+str(i))
-            i += 1
-            print(c.writeActions(plan))
+    if output_file is True:
+            with open(path + '_sol.cnf', "w") as text_file:
+                text_file.write(str(result))
 
-    # Write result to file
-    clients.to_file(towrite)
+    if with_time is True:
+        print(time() - t)
+
+def is_walk_satisfiable(folder, p, max_flips, satisfiability):
+    # This function checks if all files from a folder are satisfiable or not, using walksat,
+    # with probability p, and max_flips, given their known satisfiability.
+
+def is_dpll_satisfiable(folder, satisfiability):
+    # This function checks if all files from a folder are satisfiable or not, using DPLL,
+    #  given their known satisfiability.
+    files = get_files_from_folder(folder)
+    results = []
+    for f in files:
+        sentence = Sentence.from_file(folder+'/'+f)
+        my_val = Algorithms.setup_dpll(sentence)
+        results.append(my_val)
+    for bl in results:
+        if bl != satisfiability:
+            print('Error')
+
+def get_files_from_folder(path):
+    # Returns a list with every file in folder with 'path'.
+    only_files = [f for f in listdir(path) if isfile(join(path,f))]
+    return only_files
 
 if __name__ == "__main__":
-    main(sys.argv)
+    is_all_satisfiable('test_files/75vars_325clauses/not_satis',False)
+    # main(sys.argv)

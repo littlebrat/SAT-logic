@@ -20,7 +20,7 @@ class Algorithms:
             for j in range(max_climbs):
                 # Checks if sentence is satisfied by the current values of literals in solution object.
                 if sentence.is_satisfied(sl):
-                    return sl
+                    return sl, True
                 else:
                     # Variable to track the best score for satisfied clauses.
                     max_score = sentence.get_validated_clauses(sl)
@@ -35,7 +35,7 @@ class Algorithms:
                         sl.toggle(literal)
                     if best is not None:
                         sl.toggle(best)
-        return 'No solution was found.'
+        return None, False
 
     @staticmethod
     def walksat(sentence, p, max_flips):
@@ -46,7 +46,7 @@ class Algorithms:
         for i in range(max_flips):
             # Checks if sentence is satisfied by the current values of literals in solution object.
             if sentence.is_satisfied(sl):
-                return sl
+                return sl, True
             else:
                 # Get the list of false clauses from the model and sentence.
                 falses_clauses = sentence.false_clauses(sl)
@@ -71,7 +71,7 @@ class Algorithms:
                         sl.toggle(literal)
                     if best is not None:
                         sl.toggle(best)
-        return 'No solution was found.'
+        return None, False
 
     @staticmethod
     def setup_dpll(sentence):
@@ -103,13 +103,3 @@ class Algorithms:
         model2.set(s, False)
         new_sentence2 = Sentence.sent_copy(sentence)
         return (Algorithms.dpll(Sentence.simplify(sentence, s, True), symbols.copy(), model) or Algorithms.dpll(Sentence.simplify(new_sentence2, s, False), symbols.copy(), model2))
-
-
-sent = Sentence.from_file('../test_files/uf250/uf250-01.cnf')
-start = time()
-# r = Algorithms.gsat(sent, 50, 30)
-# r = Algorithms.walksat(sent, 0.8, 1000)
-r = Algorithms.setup_dpll(sent)
-end = time()
-print(end - start)
-print(r)
