@@ -14,6 +14,7 @@ def main(args):
     with_time = False
     output_file = False
     result = None
+    debug = False
 
     for i in range(len(args)):
         # Check user inputs
@@ -39,6 +40,8 @@ def main(args):
             with_time = True
         elif args[i] == '-o':
             output_file = True
+        elif args[i] == '-d':
+            debug = True
 
     if is_batch is False:
         sentence = Sentence.from_file(path)
@@ -50,11 +53,14 @@ def main(args):
             result = Algorithms.gsat(sentence, params[0], params[1])
     else:
         if mode == 'dpll':
-            result = Algorithms.is_dpll_satisfiable(path)
+            result = is_dpll_satisfiable(path)
         elif mode == 'walk':
-            result = Algorithms.is_walk_satisfiable(path, args[0], args[1])
+            result = is_walk_satisfiable(path, args[0], args[1])
         elif mode == 'gsat':
-            result = Algorithms.is_gsat_satisfiable(path, args[0], args[1])
+            result = is_gsat_satisfiable(path, args[0], args[1])
+
+    if debug is True:
+        print(result)
 
     if output_file is True:
             with open(path + '_sol.cnf', "w") as text_file:
@@ -63,6 +69,14 @@ def main(args):
     if with_time is True:
         print(time() - t)
 
+def get_efficiency(list):
+    # Check the amount of satisfied clauses in the algorithm
+    result = 0
+    for x in list:
+        if x is True:
+            result += 1
+    result = result / len(list)
+    return result
 
 def is_gsat_satisfiable(folder, max_restarts, max_climbs):
     # This function checks if all files from a folder are satisfiable or not, using gsat,
@@ -72,7 +86,7 @@ def is_gsat_satisfiable(folder, max_restarts, max_climbs):
     for f in files:
         sentence = Sentence.from_file(folder+'/'+f)
         my_val, bl = Algorithms.walksat(sentence, max_restarts, max_climbs)
-        results.append(my_val)
+        results.append(bl)
     return results
 
 def is_walk_satisfiable(folder, p, max_flips):
@@ -83,7 +97,7 @@ def is_walk_satisfiable(folder, p, max_flips):
     for f in files:
         sentence = Sentence.from_file(folder+'/'+f)
         my_val, bl = Algorithms.walksat(sentence, p, max_flips)
-        results.append(my_val)
+        results.append(bl)
     return results
 
 def is_dpll_satisfiable(folder):
