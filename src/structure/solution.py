@@ -19,6 +19,13 @@ class Solution:
         # Get the boolean value associated with literal 'var'.
         return self.sl[var]
 
+    def int_literal(self, var):
+        # Get the int value associated with literal 'var'.
+        if self.sl[var] is True:
+            return var
+        else:
+            return -var
+
     def toggle(self, var):
         # Swap the boolean value of the literal
         self.sl[var] = not self.sl.get(var)
@@ -26,10 +33,6 @@ class Solution:
     def set(self, var, bl):
         # Set the variable 'var' to the boolean value of 'bl'.
         self.sl[var] = bl
-
-    def output(self):
-        # YOUR CODE HERE FAGGOT!!!
-        return
 
     @staticmethod
     def deep_copy(other):

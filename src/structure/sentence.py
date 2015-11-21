@@ -9,6 +9,7 @@ class Sentence:
     def __init__(self):
         self.clauses = []
         self.variables = 0
+        self.dim = 0
 
     @staticmethod
     def from_file(path):
@@ -23,6 +24,7 @@ class Sentence:
                     continue
                 elif len(words) != 0 and words[0] == 'p' and words[1] == 'cnf' and len(words) == 4:
                     # read format
+                    sentence.dim = int(words[3])
                     sentence.variables = int(words[2])
                 elif len(words) != 0 and words[0] != '%' and 1 <= abs(int(words[0])) <= sentence.variables:
                     aux = words[:-1]
@@ -113,6 +115,7 @@ class Sentence:
     def sent_copy(other):
         r = Sentence()
         r.variables = other.variables
+        r.dim = other.dim
         for c in other.clauses:
             aux = Clause.copy(c)
             r.clauses.append(aux)
