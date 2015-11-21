@@ -56,11 +56,11 @@ def main(args):
             Algorithms.to_file(path, sentence, model, result)
     else:
         if mode == 'dpll':
-            result = is_dpll_satisfiable(path)
+            result = is_dpll_satisfiable(path, output_file)
         elif mode == 'walk':
-            result = is_walk_satisfiable(path, float(params[0]), int(params[1]))
+            result = is_walk_satisfiable(path, float(params[0]), int(params[1]), output_file)
         elif mode == 'gsat':
-            result = is_gsat_satisfiable(path, float(params[0]), int(params[1]))
+            result = is_gsat_satisfiable(path, float(params[0]), int(params[1]), output_file)
 
     if debug is True:
         print(result)
