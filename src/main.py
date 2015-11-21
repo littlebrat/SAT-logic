@@ -6,7 +6,7 @@ from os.path import isfile, join
 
 def main(args):
 
-    t = time.time()
+    t = time()
 
     mode, params = None, None
     path = None
@@ -47,9 +47,13 @@ def main(args):
             result = Algorithms.walksat(sentence, params[0], params[1])
         elif mode == 'gsat':
             result = Algorithms.gsat(sentence, params[0], params[1])
-    # else:
-
-
+    else:
+        if mode == 'dpll':
+            result = Algorithms.is_dpll_satisfiable(path)
+        elif mode == 'walk':
+            result = Algorithms.is_walk_satisfiable(path, args[0], args[1])
+        elif mode == 'gsat':
+            result = Algorithms.is_gsat_satisfiable(path, args[0], args[1])
 
     if output_file is True:
             with open(path + '_sol.cnf', "w") as text_file:
@@ -58,11 +62,30 @@ def main(args):
     if with_time is True:
         print(time() - t)
 
-def is_walk_satisfiable(folder, p, max_flips, satisfiability):
+
+def is_gsat_satisfiable(folder, max_restarts, max_climbs):
+    # This function checks if all files from a folder are satisfiable or not, using gsat,
+    # with probability p, and max_flips, given their known satisfiability.
+    files = get_files_from_folder(folder)
+    results = []
+    for f in files:
+        sentence = Sentence.from_file(folder+'/'+f)
+        my_val, bl = Algorithms.walksat(sentence, max_restarts, max_climbs)
+        results.append(my_val)
+    return results
+
+def is_walk_satisfiable(folder, p, max_flips):
     # This function checks if all files from a folder are satisfiable or not, using walksat,
     # with probability p, and max_flips, given their known satisfiability.
+    files = get_files_from_folder(folder)
+    results = []
+    for f in files:
+        sentence = Sentence.from_file(folder+'/'+f)
+        my_val, bl = Algorithms.walksat(sentence, p, max_flips)
+        results.append(my_val)
+    return results
 
-def is_dpll_satisfiable(folder, satisfiability):
+def is_dpll_satisfiable(folder):
     # This function checks if all files from a folder are satisfiable or not, using DPLL,
     #  given their known satisfiability.
     files = get_files_from_folder(folder)
@@ -71,9 +94,7 @@ def is_dpll_satisfiable(folder, satisfiability):
         sentence = Sentence.from_file(folder+'/'+f)
         my_val = Algorithms.setup_dpll(sentence)
         results.append(my_val)
-    for bl in results:
-        if bl != satisfiability:
-            print('Error')
+    return results
 
 def get_files_from_folder(path):
     # Returns a list with every file in folder with 'path'.
