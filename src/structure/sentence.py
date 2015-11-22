@@ -24,21 +24,28 @@ class Sentence:
                     # comments line should be ignored
                     continue
                 elif len(words) != 0 and words[0] == 'p' and words[1] == 'cnf' and len(words) == 4:
-                    # read format
+                    # Read format
+                    # Number of clauses
                     sentence.dim = int(words[3])
+                    # Number of variables
                     sentence.variables = int(words[2])
                 elif len(words) != 0 and words[0] != '%' and 1 <= abs(int(words[0])) <= sentence.variables:
+                    # Read clause line
                     if i < numclauses:
+                        # Check if the number of wanted clauses is lower than the intended
+                        # Add clause to list
                         aux = words[:-1]
                         cl = Clause(aux)
                         sentence.clauses.append(cl)
                         i += 1
                     else:
+                        # If we already have the number of clauses we want, return sentence.
                         sentence.dim = numclauses
                         return sentence
         return sentence
 
     def get_validated_clauses(self, solution):
+        # Check the number of satisfied clauses with model 'solution'.
         r = 0
         for c in self.clauses:
             if c.is_clause_satisfied(solution):
@@ -46,6 +53,7 @@ class Sentence:
         return r
 
     def is_satisfied(self, solution):
+        # Check if the sentence is satisfied.
         if self.get_validated_clauses(solution) == len(self.clauses):
             return True
         else:
@@ -53,6 +61,8 @@ class Sentence:
 
     @staticmethod
     def simplify(other, literal, key):
+        # Useful for DPLL, this removes literals from clauses already checked on the algorithm.
+        # Returns the new modified sentence
         s = Sentence()
         s.variables = other.variables
         for c in other.clauses:
@@ -69,18 +79,21 @@ class Sentence:
 
 
     def is_model_verified(self, solution):
+        # Useful for DPLL, this checks if the model found verifies the sentence.
         if len(self.clauses) == 0:
             return True
         else:
             return False
 
     def is_model_wrong(self, solution):
+        # Useful for DPLL, this checks if the model found doesn't verify sentece.
         for c in self.clauses:
             if c.empty():
                 return True
         return False
 
     def false_clauses(self, solution):
+        # Useful for walksat, this method returns the unsatisfied clauses from sentence with model solution.
         false_sentences = []
         for c in self.clauses:
             if not c.is_clause_satisfied(solution):
@@ -88,6 +101,7 @@ class Sentence:
         return false_sentences
 
     def find_pure_symbol(self, symbols):
+        # Finds pure symbol in clauses of sentence, returns its literal and correspondent value.
         for s in symbols:
             found_pos, found_neg = False, False
             for c in self.clauses:
@@ -100,6 +114,7 @@ class Sentence:
         return None, None
 
     def find_unit_clause(self, symbols):
+        # Finds unit clause in clauses of sentence, returns its literal and correspondent value.
         for c in self.clauses:
             literal, bl = c.get_unit_symbol()
             if literal is not None and literal in symbols:
@@ -107,6 +122,8 @@ class Sentence:
         return None, None
 
     def variable_set(self):
+        # Creates an array of literals in order of the total appearances of this symbol.
+        # This will serve as an heuristic to speed up DPLL
         v_order = {}
         for v in range(1, self.variables + 1):
             v_order[v] = 0
@@ -119,6 +136,7 @@ class Sentence:
 
     @staticmethod
     def sent_copy(other):
+        # This method makes a deep copy of this object.
         r = Sentence()
         r.variables = other.variables
         r.dim = other.dim

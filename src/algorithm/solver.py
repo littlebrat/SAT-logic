@@ -14,6 +14,7 @@ class Algorithms:
         self.model = None
 
     def get_model(self):
+        # Gets the model found for this problem.
         return self.model
 
     @staticmethod
@@ -80,6 +81,7 @@ class Algorithms:
 
     @staticmethod
     def setup_dpll(sentence):
+        # Method to initialize the dpll algorithm.
         alg = Algorithms()
         model = Solution(sentence.variables)
         symbols = sentence.variable_set()
@@ -113,6 +115,7 @@ class Algorithms:
 
     @staticmethod
     def to_file(filename, sentence, solution, result):
+        # Method that outputs the solution in cnf file.
         c = 'c ' + filename + '\n'
         s = 's cnf ' + str(result) + ' ' + str(sentence.variables) + ' ' + str(sentence.dim) + '\n'
         r = ''

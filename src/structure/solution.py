@@ -36,6 +36,7 @@ class Solution:
 
     @staticmethod
     def deep_copy(other):
+        # This method makes a deep copy of this object.
         model = Solution(other.vars)
         d = copy.deepcopy(other.sl)
         model.sl = d
