@@ -74,7 +74,10 @@ def get_efficiency(list):
     for x in list:
         if x is True:
             result += 1
-    result = result / len(list)
+    if len(list)!=0:
+        result = result / len(list)
+    else:
+        result = 0
     return result
 
 def is_gsat_satisfiable(folder, max_restarts, max_climbs, out):
@@ -88,7 +91,7 @@ def is_gsat_satisfiable(folder, max_restarts, max_climbs, out):
         if out is True:
             Algorithms.to_file(f, sentence, model, result)
         results.append(result)
-    return results
+    return get_efficiency(results)
 
 def is_walk_satisfiable(folder, p, max_flips, out):
     # This function checks if all files from a folder are satisfiable or not, using walksat,
@@ -101,7 +104,7 @@ def is_walk_satisfiable(folder, p, max_flips, out):
         if out is True:
             Algorithms.to_file(f, sentence, model, result)
         results.append(result)
-    return results
+    return get_efficiency(results)
 
 def is_dpll_satisfiable(folder, out):
     # This function checks if all files from a folder are satisfiable or not, using DPLL,
@@ -114,7 +117,7 @@ def is_dpll_satisfiable(folder, out):
         if out is True:
             Algorithms.to_file(f, sentence, model, result)
         results.append(result)
-    return results
+    return get_efficiency(results)
 
 def get_files_from_folder(path):
     # Returns a list with every file in folder with 'path'.
