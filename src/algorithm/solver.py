@@ -1,5 +1,5 @@
-from src.structure.sentence import Sentence
-from src.structure.solution import Solution
+from structure.sentence import Sentence
+from structure.solution import Solution
 from random import choice
 from random import random
 

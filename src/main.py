@@ -1,6 +1,6 @@
-from src.structure.sentence import Sentence
+from structure.sentence import Sentence
 import sys
-from src.algorithm.solver import *
+from algorithm.solver import *
 from os import listdir
 from os.path import isfile, join
 

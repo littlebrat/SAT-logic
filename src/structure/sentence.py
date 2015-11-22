@@ -1,4 +1,4 @@
-from src.structure.clause import Clause
+from structure.clause import Clause
 
 
 class Sentence:
