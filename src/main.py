@@ -16,6 +16,7 @@ def main(args):
     result = None
     model = None
     debug = False
+    clauses = None
 
     for i in range(len(args)):
         # Check user inputs
@@ -43,9 +44,14 @@ def main(args):
             output_file = True
         elif args[i] == '-d':
             debug = True
+        elif args[i] == '-c':
+            clauses = int(args[i+1])
 
     if is_batch is False:
-        sentence = Sentence.from_file(path)
+        if clauses is not None:
+            sentence = Sentence.from_file(path, clauses)
+        else:
+            sentence = Sentence.from_file(path)
         if mode == 'dpll':
             result, model = Algorithms.setup_dpll(sentence)
         elif mode == 'walk':
@@ -56,11 +62,11 @@ def main(args):
             Algorithms.to_file(path, sentence, model, result)
     else:
         if mode == 'dpll':
-            result = is_dpll_satisfiable(path, output_file)
+            result = is_dpll_satisfiable(path, output_file, clauses)
         elif mode == 'walk':
-            result = is_walk_satisfiable(path, float(params[0]), int(params[1]), output_file)
+            result = is_walk_satisfiable(path, float(params[0]), int(params[1]), output_file, clauses)
         elif mode == 'gsat':
-            result = is_gsat_satisfiable(path, float(params[0]), int(params[1]), output_file)
+            result = is_gsat_satisfiable(path, float(params[0]), int(params[1]), output_file, clauses)
 
     if debug is True:
         print(result)
@@ -80,39 +86,39 @@ def get_efficiency(list):
         result = 0
     return result
 
-def is_gsat_satisfiable(folder, max_restarts, max_climbs, out):
+def is_gsat_satisfiable(folder, max_restarts, max_climbs, out, clauses):
     # This function checks if all files from a folder are satisfiable or not, using gsat,
     # with probability p, and max_flips, given their known satisfiability.
     files = get_files_from_folder(folder)
     results = []
     for f in files:
-        sentence = Sentence.from_file(folder+'/'+f)
+        sentence = Sentence.from_file(folder+'/'+f, clauses)
         result, model = Algorithms.walksat(sentence, max_restarts, max_climbs)
         if out is True:
             Algorithms.to_file(f, sentence, model, result)
         results.append(result)
     return get_efficiency(results)
 
-def is_walk_satisfiable(folder, p, max_flips, out):
+def is_walk_satisfiable(folder, p, max_flips, out, clauses):
     # This function checks if all files from a folder are satisfiable or not, using walksat,
     # with probability p, and max_flips, given their known satisfiability.
     files = get_files_from_folder(folder)
     results = []
     for f in files:
-        sentence = Sentence.from_file(folder+'/'+f)
+        sentence = Sentence.from_file(folder+'/'+f, clauses)
         result, model = Algorithms.walksat(sentence, p, max_flips)
         if out is True:
             Algorithms.to_file(f, sentence, model, result)
         results.append(result)
     return get_efficiency(results)
 
-def is_dpll_satisfiable(folder, out):
+def is_dpll_satisfiable(folder, out, clauses):
     # This function checks if all files from a folder are satisfiable or not, using DPLL,
     #  given their known satisfiability.
     files = get_files_from_folder(folder)
     results = []
     for f in files:
-        sentence = Sentence.from_file(folder+'/'+f)
+        sentence = Sentence.from_file(folder+'/'+f, clauses)
         result, model = Algorithms.setup_dpll(sentence)
         if out is True:
             Algorithms.to_file(f, sentence, model, result)

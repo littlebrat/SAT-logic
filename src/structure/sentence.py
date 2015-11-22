@@ -12,8 +12,9 @@ class Sentence:
         self.dim = 0
 
     @staticmethod
-    def from_file(path):
+    def from_file(path, numclauses=1000000000):
         sentence = Sentence()
+        i = 0
         # this method loads a file into a object of this class.
         with open(path) as file:
             for line in file:
@@ -27,9 +28,14 @@ class Sentence:
                     sentence.dim = int(words[3])
                     sentence.variables = int(words[2])
                 elif len(words) != 0 and words[0] != '%' and 1 <= abs(int(words[0])) <= sentence.variables:
-                    aux = words[:-1]
-                    cl = Clause(aux)
-                    sentence.clauses.append(cl)
+                    if i < numclauses:
+                        aux = words[:-1]
+                        cl = Clause(aux)
+                        sentence.clauses.append(cl)
+                        i += 1
+                    else:
+                        sentence.dim = numclauses
+                        return sentence
         return sentence
 
     def get_validated_clauses(self, solution):
