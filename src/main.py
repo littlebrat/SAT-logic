@@ -66,7 +66,7 @@ def main(args):
         elif mode == 'walk':
             result = is_walk_satisfiable(path, float(params[0]), int(params[1]), output_file, clauses)
         elif mode == 'gsat':
-            result = is_gsat_satisfiable(path, float(params[0]), int(params[1]), output_file, clauses)
+            result = is_gsat_satisfiable(path, int(params[0]), int(params[1]), output_file, clauses)
 
     if debug is True:
         print(result)
@@ -96,7 +96,7 @@ def is_gsat_satisfiable(folder, max_restarts, max_climbs, out, clauses):
             sentence = Sentence.from_file(folder+'/'+f, clauses)
         else:
             sentence = Sentence.from_file(folder+'/'+f)
-        result, model = Algorithms.walksat(sentence, max_restarts, max_climbs)
+        result, model = Algorithms.gsat(sentence, max_restarts, max_climbs)
         if out is True:
             Algorithms.to_file(f, sentence, model, result)
         results.append(result)

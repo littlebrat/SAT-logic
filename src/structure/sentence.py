@@ -132,6 +132,3 @@ class Sentence:
         for c in self.clauses:
             r += str(c) + '\n'
         return r
-
-# sent = Sentence.from_file('../test_files/pikachu.txt')
-# print(sent)
