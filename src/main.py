@@ -92,7 +92,10 @@ def is_gsat_satisfiable(folder, max_restarts, max_climbs, out, clauses):
     files = get_files_from_folder(folder)
     results = []
     for f in files:
-        sentence = Sentence.from_file(folder+'/'+f, clauses)
+        if clauses is not None:
+            sentence = Sentence.from_file(folder+'/'+f, clauses)
+        else:
+            sentence = Sentence.from_file(folder+'/'+f)
         result, model = Algorithms.walksat(sentence, max_restarts, max_climbs)
         if out is True:
             Algorithms.to_file(f, sentence, model, result)
@@ -105,7 +108,10 @@ def is_walk_satisfiable(folder, p, max_flips, out, clauses):
     files = get_files_from_folder(folder)
     results = []
     for f in files:
-        sentence = Sentence.from_file(folder+'/'+f, clauses)
+        if clauses is not None:
+            sentence = Sentence.from_file(folder+'/'+f, clauses)
+        else:
+            sentence = Sentence.from_file(folder+'/'+f)
         result, model = Algorithms.walksat(sentence, p, max_flips)
         if out is True:
             Algorithms.to_file(f, sentence, model, result)
@@ -118,7 +124,10 @@ def is_dpll_satisfiable(folder, out, clauses):
     files = get_files_from_folder(folder)
     results = []
     for f in files:
-        sentence = Sentence.from_file(folder+'/'+f, clauses)
+        if clauses is not None:
+            sentence = Sentence.from_file(folder+'/'+f, clauses)
+        else:
+            sentence = Sentence.from_file(folder+'/'+f)
         result, model = Algorithms.setup_dpll(sentence)
         if out is True:
             Algorithms.to_file(f, sentence, model, result)
