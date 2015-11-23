@@ -119,11 +119,12 @@ class Algorithms:
         c = 'c ' + filename + '\n'
         s = 's cnf ' + str(result) + ' ' + str(sentence.variables) + ' ' + str(sentence.dim) + '\n'
         r = ''
-        for l in range(1, sentence.variables + 1):
-            if solution.literal(l) is not None:
-                r += 'v ' + str(solution.int_literal(l)) + '\n'
-            elif solution.literal(l) is None and result is True:
-                r += 'v ' + str(-l) + '\n'
+        if result is True:
+            for l in range(1, sentence.variables + 1):
+                if solution.literal(l) is not None:
+                    r += 'v ' + str(solution.int_literal(l)) + '\n'
+                elif solution.literal(l) is None and result is True:
+                    r += 'v ' + str(-l) + '\n'
         with open(filename + '_sol.cnf', "w") as text_file:
             res = c + s + r
             text_file.write(res)
